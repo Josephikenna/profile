@@ -1,0 +1,2510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joseph Ikenna — Graphic & UI/UX Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ══════════════════════════════════════
+     THEME SYSTEM — toggled via [data-theme]
+     ══════════════════════════════════════ */
+
+  /* FIRE THEME (default) */
+  :root, [data-theme="fire"] {
+    --black: #080808;
+    --charcoal: #0f0f0f;
+    --card: #141414;
+    --card2: #1a1a1a;
+    --border: rgba(255,46,46,0.18);
+    --red: #ff2e2e;
+    --yellow: #f5a800;
+    --red-glow: rgba(255,46,46,0.4);
+    --yellow-glow: rgba(245,168,0,0.35);
+    --red-dim: rgba(255,46,46,0.08);
+    --fire-grad: linear-gradient(135deg, #ff2e2e 0%, #ff6a00 50%, #f5a800 100%);
+    --fire-grad-h: linear-gradient(90deg, #ff2e2e 0%, #f5a800 100%);
+    --white: #f5f5f5;
+    --muted: #888;
+    /* theme-specific aliases used by all shared rules */
+    --c1: #ff2e2e;
+    --c2: #f5a800;
+    --cg: linear-gradient(90deg,#ff2e2e,#f5a800);
+    --cg-d: linear-gradient(135deg,#ff2e2e 0%,#ff6a00 50%,#f5a800 100%);
+    --cglow1: rgba(255,46,46,0.4);
+    --cglow2: rgba(245,168,0,0.35);
+    --cborder: rgba(255,46,46,0.18);
+    --cursor-ring: rgba(255,120,0,0.55);
+    --stat-bg: linear-gradient(135deg,#1a0000 0%,#2d1000 40%,#1a0d00 70%,#0d0800 100%);
+    --particle1: #ff2e2e;
+    --particle2: #f5a800;
+    --pline: #ff6a00;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  /* AURORA THEME */
+  [data-theme="aurora"] {
+    --black: #070810;
+    --charcoal: #0c0d18;
+    --card: #10111e;
+    --card2: #15162a;
+    --border: rgba(130,80,255,0.2);
+    --red: #7c3aff;
+    --yellow: #a855f7;
+    --red-glow: rgba(124,58,255,0.4);
+    --yellow-glow: rgba(168,85,247,0.35);
+    --red-dim: rgba(124,58,255,0.08);
+    --fire-grad: linear-gradient(135deg,#2e8fff 0%,#7c3aff 50%,#a855f7 100%);
+    --fire-grad-h: linear-gradient(90deg,#2e8fff 0%,#a855f7 100%);
+    --white: #f0f2ff;
+    --muted: #7878a0;
+    --c1: #2e8fff;
+    --c2: #a855f7;
+    --cg: linear-gradient(90deg,#2e8fff,#a855f7);
+    --cg-d: linear-gradient(135deg,#2e8fff 0%,#7c3aff 50%,#a855f7 100%);
+    --cglow1: rgba(46,143,255,0.4);
+    --cglow2: rgba(168,85,247,0.35);
+    --cborder: rgba(124,58,255,0.2);
+    --cursor-ring: rgba(124,58,255,0.55);
+    --stat-bg: linear-gradient(135deg,#07081a 0%,#0d0e2a 40%,#10082a 70%,#070818 100%);
+    --particle1: #2e8fff;
+    --particle2: #a855f7;
+    --pline: #7c3aff;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--red);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    box-shadow: 0 0 12px var(--red), 0 0 28px var(--red-glow), 0 0 50px rgba(245,168,0,0.15);
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--cursor-ring);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.25s, height 0.25s;
+  }
+  .cursor.hovered { width: 20px; height: 20px; background: var(--red); }
+  .cursor-ring.hovered { width: 56px; height: 56px; border-color: var(--red); }
+
+  /* CANVAS BG */
+  #particles-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--fire-grad-h); border-radius: 2px; }
+
+  /* NOISE OVERLAY */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* LAYOUT WRAPPER */
+  .wrap { position: relative; z-index: 2; }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 20px 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,8,8,0.6);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.3s;
+  }
+  nav.scrolled { padding: 14px 6%; }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--yellow); text-shadow: 0 0 14px var(--yellow), 0 0 28px rgba(245,168,0,0.4); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px;
+    background: var(--fire-grad-h);
+    transform: scaleX(0);
+    transition: transform 0.25s;
+    box-shadow: 0 0 8px var(--red);
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-cta {
+    background: var(--fire-grad-h);
+    color: var(--white);
+    border: none;
+    padding: 10px 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: box-shadow 0.25s, transform 0.2s;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .nav-cta:hover { box-shadow: 0 0 20px var(--red), 0 0 40px var(--red-glow), 0 0 70px rgba(245,168,0,0.2); transform: translateY(-1px); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    height: 2px;
+    background: var(--white);
+    transition: all 0.3s;
+  }
+  .hamburger span:first-child { width: 28px; }
+  .hamburger span:nth-child(2) { width: 20px; }
+  .hamburger span:last-child { width: 24px; }
+  .hamburger.open span:first-child { width: 24px; transform: rotate(45deg) translate(5px,5px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:last-child { width: 24px; transform: rotate(-45deg) translate(5px,-5px); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(8,8,8,0.97);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-size: 48px;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.2s, text-shadow 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--red); text-shadow: 0 0 30px var(--red); }
+
+  /* ─── SECTION BASE ─── */
+  section { padding: 120px 6%; position: relative; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--fire-grad-h);
+    box-shadow: 0 0 8px var(--red);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .red { color: var(--red); text-shadow: 0 0 20px var(--red-glow); }
+  .fire-text {
+    background: var(--fire-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 18px rgba(255,80,0,0.45));
+  }
+
+  /* FADE ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .fade-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-left.visible { opacity: 1; transform: translateX(0); }
+  .fade-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-right.visible { opacity: 1; transform: translateX(0); }
+
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+  .delay-5 { transition-delay: 0.5s; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 100px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,46,46,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,168,0,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse, rgba(255,46,46,0.22) 0%, rgba(245,168,0,0.1) 45%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: pulseGlow 4s ease-in-out infinite;
+  }
+  @keyframes pulseGlow {
+    0% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); background: radial-gradient(ellipse, rgba(255,46,46,0.22) 0%, rgba(245,168,0,0.1) 45%, transparent 70%); }
+    50% { opacity: 1; transform: translate(-50%,-50%) scale(1.12); background: radial-gradient(ellipse, rgba(245,168,0,0.18) 0%, rgba(255,46,46,0.12) 45%, transparent 70%); }
+    100% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); background: radial-gradient(ellipse, rgba(255,46,46,0.22) 0%, rgba(245,168,0,0.1) 45%, transparent 70%); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeInUp 0.8s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: var(--font-display);
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.88;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeInUp 0.8s 0.4s forwards;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 4vw, 52px);
+    letter-spacing: 4px;
+    background: var(--fire-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(255,80,0,0.5));
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeInUp 0.8s 0.6s forwards;
+  }
+
+  .hero-tagline {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeInUp 0.8s 0.8s forwards;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeInUp 0.8s 1s forwards;
+  }
+
+  .btn-primary {
+    background: var(--fire-grad-h);
+    color: var(--white);
+    border: none;
+    padding: 16px 36px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: box-shadow 0.3s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.1);
+    transition: left 0.3s;
+  }
+  .btn-primary:hover::before { left: 100%; }
+  .btn-primary:hover { box-shadow: 0 0 30px var(--red), 0 0 60px var(--red-glow), 0 0 80px rgba(245,168,0,0.2); transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 16px 36px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-outline:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    box-shadow: 0 0 20px rgba(245,168,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 6%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    opacity: 0;
+    animation: fadeInUp 0.8s 1.4s forwards;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--yellow), var(--red), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%,100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+  .scroll-text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+  }
+
+  .hero-floating-badge {
+    position: absolute;
+    right: 6%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 160px; height: 160px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: rotateBadge 20s linear infinite;
+    opacity: 0;
+    animation: rotateBadge 20s linear infinite, fadeIn 1s 1.2s forwards;
+  }
+  .badge-text {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    text-align: center;
+    line-height: 1.6;
+  }
+  @keyframes rotateBadge {
+    from { transform: translateY(-50%) rotate(0deg); }
+    to { transform: translateY(-50%) rotate(360deg); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── ABOUT ─── */
+  #about { background: var(--charcoal); }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+  }
+  .about-img-frame {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--card);
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+  .about-img-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,46,46,0.12) 0%, rgba(245,168,0,0.06) 50%, transparent 80%);
+    z-index: 1;
+  }
+  .about-img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #111 50%, #1a0000 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .about-initials {
+    font-family: var(--font-display);
+    font-size: 120px;
+    letter-spacing: -4px;
+    background: linear-gradient(135deg, rgba(255,46,46,0.14), rgba(245,168,0,0.1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    user-select: none;
+  }
+  .about-img-border {
+    position: absolute;
+    top: 16px; left: 16px; right: -16px; bottom: -16px;
+    border: 1px solid var(--border);
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    z-index: -1;
+  }
+  .about-tag {
+    position: absolute;
+    bottom: -20px; right: 20px;
+    background: var(--fire-grad-h);
+    padding: 12px 20px;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  }
+  .about-tag-text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  /* RESPONSIVE IMAGE */
+  .fit-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: left;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    transform: scale(1.15);
+    transform-origin: left center;
+  }
+
+  .about-text p {
+    color: rgba(245,245,245,0.65);
+    line-height: 1.8;
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: 300;
+  }
+  .about-text p strong { color: var(--white); font-weight: 600; }
+
+  .about-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 32px;
+  }
+  .pill {
+    padding: 8px 18px;
+    border: 1px solid rgba(245,168,0,0.2);
+    background: rgba(245,168,0,0.06);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .pill:hover { background: rgba(245,168,0,0.14); border-color: var(--yellow); }
+
+  /* ─── SERVICES ─── */
+  #services { background: var(--black); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+  .service-card {
+    background: var(--card);
+    padding: 44px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, background 0.3s;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--fire-grad-h);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    box-shadow: 0 0 10px var(--red), 0 0 20px rgba(245,168,0,0.2);
+  }
+  .service-card:hover { background: var(--card2); transform: translateY(-4px); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-num {
+    font-family: var(--font-display);
+    font-size: 64px;
+    color: rgba(255,46,46,0.08);
+    line-height: 1;
+    margin-bottom: 16px;
+    transition: color 0.3s;
+  }
+  .service-card:hover .service-num { color: rgba(245,168,0,0.15); }
+
+  .service-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 20px;
+    color: var(--yellow);
+    filter: drop-shadow(0 0 6px rgba(245,168,0,0.5));
+  }
+  .service-card h3 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .service-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ─── SKILLS ─── */
+  #skills { background: var(--charcoal); }
+  .skills-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 60px;
+    align-items: start;
+  }
+  .skill-bar-wrap {
+    margin-bottom: 28px;
+  }
+  .skill-bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .skill-bar-label span:first-child {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .skill-bar-label span:last-child {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--yellow);
+  }
+  .skill-bar-track {
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .skill-bar-fill {
+    height: 100%;
+    background: var(--fire-grad-h);
+    width: 0;
+    transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: 0 0 10px var(--red-glow), 0 0 20px rgba(245,168,0,0.15);
+    position: relative;
+  }
+  .skill-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: -3px;
+    width: 9px; height: 9px;
+    background: var(--yellow);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--yellow);
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .tool-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.3s, background 0.3s, transform 0.2s;
+    cursor: none;
+  }
+  .tool-card:hover {
+    border-color: var(--yellow);
+    background: rgba(245,168,0,0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3), 0 0 20px rgba(245,168,0,0.1);
+  }
+  .tool-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+  .tool-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+  .tool-type {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ─── PORTFOLIO ─── */
+  #portfolio { background: var(--black); }
+
+  .portfolio-filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 40px 0;
+  }
+  .filter-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 20px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--fire-grad-h);
+    color: var(--white);
+    border-color: var(--red);
+    box-shadow: 0 0 15px var(--red-glow), 0 0 30px rgba(245,168,0,0.15);
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .project-card {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    cursor: none;
+    background: var(--card);
+  }
+  .project-card:nth-child(1) { grid-column: span 2; }
+  .project-card:nth-child(4) { grid-column: span 2; }
+
+  .project-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .project-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.6s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-placeholder .p-label {
+    font-family: var(--font-display);
+    font-size: 80px;
+    opacity: 0.06;
+    position: absolute;
+    letter-spacing: -2px;
+    pointer-events: none;
+  }
+
+  .project-card:hover .project-placeholder,
+  .project-card:hover .project-img { transform: scale(1.06); }
+
+  .project-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 28px;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .project-card:hover .project-overlay { opacity: 1; }
+
+  .project-cat {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+  .project-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .project-desc {
+    font-size: 12px;
+    color: rgba(245,245,245,0.6);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .project-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    border: none;
+    background: transparent;
+    cursor: none;
+    padding: 0;
+    transition: gap 0.2s;
+  }
+  .project-view:hover { gap: 14px; }
+  .project-view svg { width: 14px; height: 14px; }
+
+  /* PROJECT MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(10px);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: var(--card);
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    transform: scale(0.9);
+    transition: transform 0.3s;
+    border: 1px solid var(--border);
+  }
+  .modal-overlay.open .modal-box { transform: scale(1); }
+  .modal-img-area {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .modal-body { padding: 32px; }
+  .modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 36px; height: 36px;
+    background: rgba(255,46,46,0.15);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-size: 18px;
+    cursor: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--fire-grad-h); }
+
+  /* ─── STATS ─── */
+  #stats {
+    background: var(--stat-bg);
+    border-top: 2px solid transparent;
+    border-image: var(--fire-grad-h) 1;
+    padding: 80px 6%;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  .stat-item {
+    text-align: center;
+    position: relative;
+  }
+  .stat-item::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 20%;
+    height: 60%;
+    width: 1px;
+    background: rgba(255,46,46,0.25);
+  }
+  .stat-item:last-child::after { display: none; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 7vw, 84px);
+    line-height: 1;
+    background: var(--fire-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    letter-spacing: -1px;
+    filter: drop-shadow(0 0 12px rgba(255,80,0,0.4));
+  }
+  .stat-plus { color: var(--yellow); -webkit-text-fill-color: var(--yellow); filter: none; }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(245,168,0,0.6);
+    margin-top: 8px;
+    display: block;
+  }
+
+  /* ─── WHY CHOOSE ME ─── */
+  #why { background: var(--charcoal); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+  .why-card {
+    background: var(--card);
+    padding: 40px 36px;
+    display: flex;
+    gap: 24px;
+    transition: background 0.3s;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .why-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: linear-gradient(to bottom, var(--red), var(--yellow));
+    transition: height 0.4s;
+    box-shadow: 0 0 12px rgba(255,100,0,0.5);
+  }
+  .why-card:hover { background: var(--card2); }
+  .why-card:hover::before { height: 100%; }
+
+  .why-num {
+    font-family: var(--font-display);
+    font-size: 48px;
+    background: var(--fire-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(255,80,0,0.4));
+  }
+  .why-card h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .why-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ─── TESTIMONIALS ─── */
+  #testimonials { background: var(--black); }
+  .testimonials-track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+  .testi-card {
+    background: var(--card);
+    padding: 36px 32px;
+    position: relative;
+    border: 1px solid transparent;
+    transition: border-color 0.3s, transform 0.3s, background 0.3s;
+    cursor: none;
+  }
+  .testi-card:hover {
+    border-color: var(--border);
+    transform: translateY(-6px);
+    background: var(--card2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .testi-quote {
+    font-family: var(--font-display);
+    font-size: 72px;
+    background: var(--fire-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 0.6;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 8px rgba(255,80,0,0.3));
+  }
+  .testi-text {
+    font-size: 14px;
+    color: rgba(245,245,245,0.7);
+    line-height: 1.8;
+    margin-bottom: 24px;
+    font-weight: 300;
+    font-style: italic;
+  }
+  .testi-stars {
+    color: var(--yellow);
+    font-size: 14px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 8px var(--yellow-glow);
+  }
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .testi-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--card2);
+    border: 2px solid rgba(245,168,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--yellow);
+  }
+  .testi-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--white);
+    font-weight: 700;
+  }
+  .testi-role {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ─── CONTACT ─── */
+  #contact { background: var(--charcoal); }
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 60px;
+  }
+  .contact-info h3 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+  .contact-info p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    background: var(--card);
+    border-left: 3px solid transparent;
+    border-image: linear-gradient(to bottom, var(--red), var(--yellow)) 1;
+    transition: background 0.2s;
+  }
+  .contact-item:hover { background: var(--card2); }
+  .contact-icon {
+    width: 36px; height: 36px;
+    color: var(--yellow);
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 4px rgba(245,168,0,0.4));
+  }
+  .contact-detail { font-size: 13px; color: var(--white); }
+  .contact-detail span { display: block; font-size: 10px; font-family: var(--font-mono); color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2px; }
+
+  .social-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 36px;
+  }
+  .social-link {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .social-link:hover {
+    background: var(--fire-grad-h);
+    border-color: var(--red);
+    color: var(--white);
+    box-shadow: 0 0 20px var(--red-glow), 0 0 40px rgba(245,168,0,0.15);
+    transform: translateY(-3px);
+  }
+  .social-link svg { width: 18px; height: 18px; }
+
+  /* FORM */
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-group { position: relative; }
+  .form-group label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: var(--white);
+    padding: 14px 18px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+    resize: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: var(--yellow);
+    box-shadow: 0 0 15px rgba(245,168,0,0.12), 0 0 30px rgba(255,46,46,0.06);
+  }
+  .form-group textarea { min-height: 120px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-submit {
+    background: var(--fire-grad-h);
+    color: var(--white);
+    border: none;
+    padding: 18px 40px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: none;
+    width: 100%;
+    transition: box-shadow 0.3s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    position: relative;
+    overflow: hidden;
+  }
+  .form-submit::after {
+    content: 'MESSAGE SENT ✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a5c1a;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .form-submit.sent::after { opacity: 1; }
+  .form-submit:hover { box-shadow: 0 0 30px var(--red), 0 0 60px var(--red-glow), 0 0 80px rgba(245,168,0,0.15); transform: translateY(-2px); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 40px 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .footer-logo span { color: var(--yellow); text-shadow: 0 0 10px rgba(245,168,0,0.5); }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .footer-copy span { color: var(--red); }
+  .back-top {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--muted);
+    transition: all 0.2s;
+    font-size: 18px;
+  }
+  .back-top:hover { background: var(--fire-grad-h); border-color: var(--red); color: var(--white); box-shadow: 0 0 20px rgba(255,80,0,0.3); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1100px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+    .project-card:nth-child(1), .project-card:nth-child(4) { grid-column: span 1; }
+    .testimonials-track { grid-template-columns: repeat(2, 1fr); }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-item:nth-child(2)::after { display: none; }
+  }
+  @media (max-width: 900px) {
+    .about-inner { grid-template-columns: 1fr; gap: 48px; }
+    .about-img-wrap { max-width: 360px; }
+    .skills-layout { grid-template-columns: 1fr; gap: 48px; }
+    .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+    .why-grid { grid-template-columns: 1fr; }
+    .hero-floating-badge { display: none; }
+  }
+  @media (max-width: 720px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .testimonials-track { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+
+  /* ─── THEME TOGGLE ─── */
+  #theme-toggle {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 9990;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--card2);
+    cursor: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(12px);
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    overflow: hidden;
+  }
+  #theme-toggle:hover {
+    transform: scale(1.12) rotate(15deg);
+    box-shadow: 0 0 24px var(--cglow1), 0 0 48px var(--cglow2);
+    border-color: var(--c1);
+  }
+  .toggle-icon {
+    width: 28px;
+    height: 28px;
+    transition: opacity 0.3s, transform 0.4s;
+    position: absolute;
+  }
+  .toggle-icon { transition: opacity 0.35s, transform 0.4s; }
+  .toggle-icon-fire   { opacity: 1; }
+  .toggle-icon-aurora { opacity: 0; }
+  .toggle-icon-red    { opacity: 0; }
+  [data-theme="aurora"]  .toggle-icon-fire   { opacity: 0; }
+  [data-theme="aurora"]  .toggle-icon-aurora { opacity: 1; }
+  [data-theme="aurora"]  .toggle-icon-red    { opacity: 0; }
+  [data-theme="neonred"] .toggle-icon-fire   { opacity: 0; }
+  [data-theme="neonred"] .toggle-icon-aurora { opacity: 0; }
+  [data-theme="neonred"] .toggle-icon-red    { opacity: 1; }
+
+  /* theme-switch glow overlay on body */
+  #theme-flash {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 9995;
+    opacity: 0;
+    transition: opacity 0.15s;
+    background: radial-gradient(ellipse at center, var(--c1) 0%, transparent 70%);
+  }
+  #theme-flash.flash { opacity: 0.07; }
+
+  /* NEON RED THEME */
+  [data-theme="neonred"] {
+    --black: #080808;
+    --charcoal: #0f0f0f;
+    --card: #141414;
+    --card2: #1a1a1a;
+    --border: rgba(255,46,46,0.18);
+    --red: #ff2e2e;
+    --yellow: #ff2e2e;
+    --red-glow: rgba(255,46,46,0.4);
+    --yellow-glow: rgba(255,46,46,0.35);
+    --red-dim: rgba(255,46,46,0.08);
+    --fire-grad: linear-gradient(135deg,#ff2e2e 0%,#ff4444 50%,#ff2e2e 100%);
+    --fire-grad-h: linear-gradient(90deg,#ff2e2e 0%,#ff2e2e 100%);
+    --white: #f5f5f5;
+    --muted: #888;
+    --c1: #ff2e2e;
+    --c2: #ff2e2e;
+    --cg: linear-gradient(90deg,#ff2e2e,#ff2e2e);
+    --cg-d: linear-gradient(135deg,#ff2e2e 0%,#ff4444 50%,#ff2e2e 100%);
+    --cglow1: rgba(255,46,46,0.4);
+    --cglow2: rgba(255,46,46,0.35);
+    --cborder: rgba(255,46,46,0.18);
+    --cursor-ring: rgba(255,46,46,0.5);
+    --stat-bg: #ff2e2e;
+    --particle1: #ff2e2e;
+    --particle2: #ff6666;
+    --pline: #ff2e2e;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  /* smooth all CSS variable transitions */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color, box-shadow, filter;
+    transition-duration: 0.5s;
+    transition-timing-function: ease;
+  }
+  /* but don't interfere with existing transitions on animated elements */
+  .fade-up, .fade-left, .fade-right, .cursor, .cursor-ring,
+  .skill-bar-fill, .project-card, .testi-card, .service-card,
+  .tool-card, .why-card, .btn-primary, .btn-outline, .nav-cta,
+  .form-submit, .social-link, .back-top, .modal-overlay, .modal-box,
+  .hamburger span, nav, .project-overlay, .project-placeholder,
+  .about-img-frame, #particles-canvas {
+    transition-property: unset;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- CANVAS -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="closeMobile()">Home</a>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#portfolio" onclick="closeMobile()">Work</a>
+  <a href="#testimonials" onclick="closeMobile()">Reviews</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<div class="wrap">
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">JI<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire Me</a>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">★ Available for Projects ★</p>
+    <h1 class="hero-name">JOSEPH<br><span class="fire-text">IKENNA</span></h1>
+    <p class="hero-title">Graphic & UI/UX Designer</p>
+    <p class="hero-tagline">Crafting bold visuals and digital experiences that don't just turn heads — they command attention, build brands, and convert audiences into loyal communities.</p>
+    <div class="hero-btns">
+      <a href="#portfolio" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-outline">Hire Me</a>
+    </div>
+  </div>
+  <div class="hero-floating-badge">
+    <div class="badge-text">Creative<br>Design<br>★<br>Visual<br>Master</div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-img-wrap fade-left">
+      <div class="about-img-frame">
+        <div class="about-img-placeholder">
+          <img src="images/me.png" class="fit-img">
+        </div>
+      </div>
+      <div class="about-img-border"></div>
+      <div class="about-tag">
+        <span class="about-tag-text">Creative Director</span>
+      </div>
+    </div>
+    <div class="about-text fade-right">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">Design is my<br><span class="fire-text">Language</span></h2>
+      <p>I'm <strong>Joseph Ikenna</strong> — a Graphic Designer and UI/UX specialist who believes that powerful design isn't decoration. It's communication. It's the invisible force that makes a brand unforgettable and a user experience feel effortless.</p>
+      <p>With a sharp eye for visual storytelling and a deep understanding of human psychology, I transform raw ideas into <strong>compelling brand identities, stunning digital interfaces, and scroll-stopping social content</strong> that elevates businesses above the noise.</p>
+      <p>From <strong>early-stage startups</strong> looking to establish their first identity, to <strong>established brands</strong> seeking a bold reinvention — I bring strategy, creativity, and execution together in one cohesive vision. Every pixel is intentional. Every color tells a story. Every project is built to perform.</p>
+      <div class="about-pills">
+        <span class="pill">Visual Storytelling</span>
+        <span class="pill">Brand Strategy</span>
+        <span class="pill">UX Research</span>
+        <span class="pill">Design Systems</span>
+        <span class="pill">Motion Design</span>
+        <span class="pill">Social Media</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SERVICES ─── -->
+<section id="services">
+  <div class="section-label fade-up">What I Do</div>
+  <h2 class="section-title fade-up delay-1">Services That<br><span class="fire-text">Deliver Results</span></h2>
+  <div class="services-grid">
+    <div class="service-card fade-up delay-1">
+      <div class="service-num">01</div>
+      <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/></svg>
+      <h3>Branding & Identity</h3>
+      <p>Complete brand systems including logo design, color palettes, typography, brand guidelines, and visual language that communicates your story with precision and power.</p>
+    </div>
+    <div class="service-card fade-up delay-2">
+      <div class="service-num">02</div>
+      <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/></svg>
+      <h3>UI/UX Design</h3>
+      <p>User-centered design that balances stunning aesthetics with seamless functionality. From wireframes to high-fidelity prototypes, I craft interfaces users love to interact with.</p>
+    </div>
+    <div class="service-card fade-up delay-3">
+      <div class="service-num">03</div>
+      <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>
+      <h3>Social Media Design</h3>
+      <p>Eye-catching content that stops the scroll — branded templates, post designs, stories, carousels, and campaign visuals optimized for maximum engagement.</p>
+    </div>
+    <div class="service-card fade-up delay-1">
+      <div class="service-num">04</div>
+      <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
+      <h3>Motion Graphics</h3>
+      <p>Animated logos, intro sequences, explainer videos, and dynamic social content that brings your brand to life through the power of motion and storytelling.</p>
+    </div>
+    <div class="service-card fade-up delay-2">
+      <div class="service-num">05</div>
+      <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+      <h3>Print & Packaging</h3>
+      <p>Flyers, business cards, brochures, packaging, and marketing collateral designed to leave a lasting physical impression that reflects your brand's premium positioning.</p>
+    </div>
+    <div class="service-card fade-up delay-3">
+      <div class="service-num">06</div>
+      <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <h3>Visual Consulting</h3>
+      <p>Strategic design audits, creative direction, and brand positioning consultations to help businesses identify visual weaknesses and craft a winning aesthetic strategy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SKILLS ─── -->
+<section id="skills">
+  <div class="section-label fade-up">Expertise</div>
+  <h2 class="section-title fade-up delay-1">Skills &<br><span class="fire-text">Tools</span></h2>
+  <div class="skills-layout">
+    <div>
+      <div class="skill-bar-wrap fade-up delay-1">
+        <div class="skill-bar-label"><span>Branding & Identity</span><span>96%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="96"></div></div>
+      </div>
+      <div class="skill-bar-wrap fade-up delay-2">
+        <div class="skill-bar-label"><span>UI/UX Design</span><span>92%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="92"></div></div>
+      </div>
+      <div class="skill-bar-wrap fade-up delay-3">
+        <div class="skill-bar-label"><span>Social Media Design</span><span>98%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="98"></div></div>
+      </div>
+      <div class="skill-bar-wrap fade-up delay-4">
+        <div class="skill-bar-label"><span>Motion Graphics</span><span>85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-bar-wrap fade-up delay-5">
+        <div class="skill-bar-label"><span>Print & Packaging</span><span>90%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
+      </div>
+    </div>
+    <div class="tools-grid fade-up delay-2">
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(49,166,255,0.1);color:#31a6ff;">Ps</div>
+        <div><div class="tool-name">Photoshop</div><div class="tool-type">Photo Editing</div></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(255,154,0,0.1);color:#ff9a00;">Ai</div>
+        <div><div class="tool-name">Illustrator</div><div class="tool-type">Vector Design</div></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(160,80,255,0.1);color:#a050ff;">Fg</div>
+        <div><div class="tool-name">Figma</div><div class="tool-type">UI/UX Prototyping</div></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(0,200,200,0.1);color:#00c8c8;">Ae</div>
+        <div><div class="tool-name">After Effects</div><div class="tool-type">Motion Graphics</div></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(0,196,204,0.1);color:#00c4cc;">Cv</div>
+        <div><div class="tool-name">Canva</div><div class="tool-type">Quick Designs</div></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(255,46,46,0.1);color:#ff2e2e;">Pr</div>
+        <div><div class="tool-name">Premiere Pro</div><div class="tool-type">Video Editing</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PORTFOLIO ─── -->
+<section id="portfolio">
+  <div class="section-label fade-up">Portfolio</div>
+  <h2 class="section-title fade-up delay-1">Selected<br><span class="fire-text">Work</span></h2>
+  <div class="portfolio-filter fade-up delay-2">
+    <button class="filter-btn active" data-filter="all">All Work</button>
+    <button class="filter-btn" data-filter="branding">Branding</button>
+    <button class="filter-btn" data-filter="uiux">UI/UX</button>
+    <button class="filter-btn" data-filter="social">Social Media</button>
+    <button class="filter-btn" data-filter="motion">Motion</button>
+    <button class="filter-btn" data-filter="side gig">Side-Gig</button>
+  </div>
+  <div class="portfolio-grid">
+
+    <div class="project-card fade-up delay-1" data-category="branding" data-image="images/nova.png" onclick="openModal(0)">
+      <div class="project-placeholder" style="background-image:url('images/nova.png');background-size:cover;background-position:center;">
+        <span class="p-label">01</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Branding</p>
+        <h3 class="project-title">NOVA Brand Identity</h3>
+        <p class="project-desc">Complete visual identity for a fintech startup — logo, color system, and brand guidelines.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-2" data-category="uiux" data-image="images/uiux.jpg" onclick="openModal(1)">
+      <div class="project-placeholder" style="background-image:url('images/uiux.png');background-size:cover;background-position:center;">
+        <span class="p-label">02</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">UI/UX Design</p>
+        <h3 class="project-title">HealthTrack App</h3>
+        <p class="project-desc">Mobile health dashboard UI with intuitive data visualization and clean user flows.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-3" data-category="social" data-image="images/green earth.png" onclick="openModal(2)">
+      <div class="project-placeholder" style="background-image:url('images/green earth.png');background-size:cover;background-position:center;">
+        <span class="p-label">03</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Social Media</p>
+        <h3 class="project-title">GreenEarth Campaign</h3>
+        <p class="project-desc">30-day social media campaign with branded templates for an eco-conscious lifestyle brand.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-1" data-category="branding" data-image="images/coffee.jpg" onclick="openModal(3)">
+      <div class="project-placeholder" style="background-image:url('images/coffee.jpg');background-size:cover;background-position:center;">
+        <span class="p-label">04</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Branding</p>
+        <h3 class="project-title">Luxe Coffee Co.</h3>
+        <p class="project-desc">Premium packaging and brand identity for a specialty coffee chain targeting urban professionals.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-2" data-category="motion" data-image="images/motion.png" onclick="openModal(4)">
+      <div class="project-placeholder" style="background-image:url('images/motion.png');background-size:cover;background-position:center;">
+        <span class="p-label">05</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Motion Graphics</p>
+        <h3 class="project-title">TechPulse Intro</h3>
+        <p class="project-desc">Animated logo reveal and brand intro sequence for a tech YouTube channel.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-3" data-category="uiux" data-image="images/trading.png" onclick="openModal(5)">
+      <div class="project-placeholder" style="background-image:url('images/trading.png');background-size:cover;background-position:center;">
+        <span class="p-label">06</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">UI/UX Design</p>
+        <h3 class="project-title">Finvest Dashboard</h3>
+        <p class="project-desc">Investment portfolio management web app with complex data made beautifully simple.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-1" data-category="social" data-image="images/foodie.png" onclick="openModal(6)">
+      <div class="project-placeholder" style="background-image:url('images/foodie.png');background-size:cover;background-position:center;">
+        <span class="p-label">07</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Social Media</p>
+        <h3 class="project-title">FoodieHub Reels</h3>
+        <p class="project-desc">Visual content strategy and template system for a fast-growing food delivery brand.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-2" data-category="branding" data-image="images/apex1.png" onclick="openModal(7)">
+      <div class="project-placeholder" style="background-image:url('images/apex1.png');background-size:cover;background-position:center;">
+        <span class="p-label">08</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Branding</p>
+        <h3 class="project-title">Apex Fitness Brand</h3>
+        <p class="project-desc">Aggressive, high-energy brand identity for a premium fitness coaching business.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(1\).jpg" onclick="openModal(8)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(1\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">09</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(2\).jpg" onclick="openModal(9)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(2\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">10</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(3\).jpg" onclick="openModal(10)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(3\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">11</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(4\).jpg" onclick="openModal(11)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(4\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">12</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(5\).jpg" onclick="openModal(12)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(5\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">13</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(6\).jpg" onclick="openModal(13)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(6\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">14</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(7\).jpg" onclick="openModal(14)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(7\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">15</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(8\).jpg" onclick="openModal(15)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(8\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">16</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(9\).jpg" onclick="openModal(16)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(9\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">17</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(10\).jpg" onclick="openModal(17)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(10\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">18</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(11\).jpg" onclick="openModal(18)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(11\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">19</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(12\).jpg" onclick="openModal(19)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(12\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">20</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(13\).jpg" onclick="openModal(20)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(13\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">21</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(14\).jpg" onclick="openModal(21)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(14\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">22</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(15\).jpg" onclick="openModal(22)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(15\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">23</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(16\).jpg" onclick="openModal(23)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(16\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">24</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(17\).jpg" onclick="openModal(24)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(17\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">25</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(18\).jpg" onclick="openModal(25)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(18\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">26</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(19\).jpg" onclick="openModal(26)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(19\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">27</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(20\).jpg" onclick="openModal(27)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(20\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">28</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="project-card fade-up delay-2" data-category="side gig" data-image="images/project\ \(21\).jpg" onclick="openModal(28)">
+      <div class="project-placeholder" style="background-image:url('images/project\ \(21\).jpg');background-size:cover;background-position:center;">
+        <span class="p-label">29</span>
+      </div>
+      <div class="project-overlay">
+        <p class="project-cat">Side Gig</p>
+        <h3 class="project-title">Graphic Design</h3>
+        <p class="project-desc">Graphic design with perfect typography and color theory.</p>
+        <button class="project-view">View Project <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-item fade-up">
+      <span class="stat-num" data-count="250">0</span><span class="stat-plus">+</span>
+      <span class="stat-label">Projects Completed</span>
+    </div>
+    <div class="stat-item fade-up delay-1">
+      <span class="stat-num" data-count="180">0</span><span class="stat-plus">+</span>
+      <span class="stat-label">Happy Clients</span>
+    </div>
+    <div class="stat-item fade-up delay-2">
+      <span class="stat-num" data-count="5">0</span><span class="stat-plus">+</span>
+      <span class="stat-label">Years Experience</span>
+    </div>
+    <div class="stat-item fade-up delay-3">
+      <span class="stat-num" data-count="1200">0</span><span class="stat-plus">+</span>
+      <span class="stat-label">Designs Delivered</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHY CHOOSE ME ─── -->
+<section id="why">
+  <div class="section-label fade-up">Advantages</div>
+  <h2 class="section-title fade-up delay-1">Why Choose<br><span class="fire-text">Joseph Ikenna</span></h2>
+  <div class="why-grid">
+    <div class="why-card fade-up delay-1">
+      <div class="why-num">01</div>
+      <div>
+        <h3>Strategy-First Design</h3>
+        <p>I don't just make things look good — I make them work. Every design decision is backed by strategy, psychology, and a clear understanding of your business goals and target audience.</p>
+      </div>
+    </div>
+    <div class="why-card fade-up delay-2">
+      <div class="why-num">02</div>
+      <div>
+        <h3>Fast Turnaround</h3>
+        <p>Time is money. I deliver premium-quality work within agreed timelines without compromising on the details. Revisions are handled promptly and professionally.</p>
+      </div>
+    </div>
+    <div class="why-card fade-up delay-3">
+      <div class="why-num">03</div>
+      <div>
+        <h3>Client-Centered Process</h3>
+        <p>Your vision is my starting point. I listen, ask the right questions, and collaborate closely with you to ensure the final result exceeds every expectation you had going in.</p>
+      </div>
+    </div>
+    <div class="why-card fade-up delay-4">
+      <div class="why-num">04</div>
+      <div>
+        <h3>Cross-Platform Mastery</h3>
+        <p>From print to digital, social to motion — I deliver consistent, premium results across every medium and platform, ensuring your brand looks elite everywhere it appears.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section id="testimonials">
+  <div class="section-label fade-up">Social Proof</div>
+  <h2 class="section-title fade-up delay-1">What Clients<br><span class="fire-text">Say</span></h2>
+  <div class="testimonials-track">
+    <div class="testi-card fade-up delay-1">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Joseph completely transformed how our brand looks and feels. We went from looking like a generic startup to a premium company overnight. The response from our customers has been overwhelming — people keep telling us how professional we look. Worth every naira.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-author">
+        <div class="testi-avatar">TE</div>
+        <div>
+          <div class="testi-name">Tobenna Ezeani</div>
+          <div class="testi-role">Founder, PayNow Finance</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card fade-up delay-2">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">We hired Joseph to redesign our app's UI and the results were jaw-dropping. User engagement went up by 47% in the first month alone. He has this rare ability to combine beautiful design with genuine functionality. He's not just a designer — he's a problem solver.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-author">
+        <div class="testi-avatar">AA</div>
+        <div>
+          <div class="testi-name">Amara Adeyemi</div>
+          <div class="testi-role">CEO, SwiftLogic Tech</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card fade-up delay-3">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">My Instagram went from 2k to 18k followers in 3 months after Joseph redesigned my content strategy and templates. Every post looks intentional and premium. Brands started reaching out to me for collaborations. Joseph is the reason my personal brand is where it is today.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-author">
+        <div class="testi-avatar">CN</div>
+        <div>
+          <div class="testi-name">Chiamaka Nwosu</div>
+          <div class="testi-role">Content Creator & Brand Influencer</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card fade-up delay-1">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Exceptional work, exceptional communication. Joseph delivered a complete brand package for our restaurant that felt like it was designed by a major agency. Customers compliment our menus, signage, and packaging constantly. The attention to detail is unmatched.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-author">
+        <div class="testi-avatar">BO</div>
+        <div>
+          <div class="testi-name">Biodun Okafor</div>
+          <div class="testi-role">Owner, The Platinum Kitchen</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card fade-up delay-2">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">I've worked with several designers and Joseph is in a completely different league. He asked questions no other designer ever asked me — about my target market, my competitors, my goals. The final brand identity felt like it was built specifically to win. Because it was.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-author">
+        <div class="testi-avatar">KD</div>
+        <div>
+          <div class="testi-name">Kingsley Dike</div>
+          <div class="testi-role">Co-Founder, UrbanNest Realty</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card fade-up delay-3">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Joseph created our entire product catalog, packaging, and trade show materials in under two weeks — all at a quality I didn't think was possible at his price point. He's fast, talented, and genuinely passionate about the work. I won't use anyone else going forward.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-author">
+        <div class="testi-avatar">RU</div>
+        <div>
+          <div class="testi-name">Rachel Uche</div>
+          <div class="testi-role">Director, Solaris Beauty Products</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="section-label fade-up">Get In Touch</div>
+  <h2 class="section-title fade-up delay-1">Let's Create<br><span class="fire-text">Something Great</span></h2>
+  <div class="contact-inner">
+    <div class="fade-left">
+      <h3>Ready to elevate<br>your brand?</h3>
+      <p>I'm open to new projects, collaborations, and creative partnerships. Whether you need a full brand overhaul or a single killer design, let's talk about what's possible.</p>
+
+      <div class="contact-item">
+        <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+        <div class="contact-detail"><span>Phone</span>09024478022</div>
+      </div>
+      <div class="contact-item">
+        <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.904M14.25 9h2.25M5.904 18.75c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 01-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 10.203 4.167 9.75 5 9.75h1.053c.472 0 .745.556.5.96a8.958 8.958 0 00-1.302 4.665c0 1.194.232 2.333.654 3.375z"/></svg>
+        <div class="contact-detail"><span>LinkedIn</span>Joseph Ikenna</div>
+      </div>
+      <div class="contact-item">
+        <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5H4.5a2.25 2.25 0 00-2.25 2.25m19.5 0v-2.25A2.25 2.25 0 0019.5 2.25H4.5A2.25 2.25 0 002.25 4.5v2.25"/></svg>
+        <div class="contact-detail"><span>Email</span><a href="mailto:josephikenna88@gmail.com" style="color: var(--white); text-decoration: none;">josephikenna88@gmail.com</a></div>
+      </div>
+
+      <div class="social-links">
+        <!-- Facebook -->
+        <a href="#" class="social-link" title="Facebook">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <!-- Instagram -->
+        <a href="#" class="social-link" title="Instagram">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <!-- Twitter/X -->
+        <a href="#" class="social-link" title="X / Twitter">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <!-- WhatsApp -->
+        <a href="https://wa.me/2349024478022" class="social-link" title="WhatsApp">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="fade-right">
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="john@company.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" placeholder="Project Inquiry / Branding / UI/UX...">
+        </div>
+        <div class="form-group">
+          <label>Budget Range</label>
+          <input type="text" placeholder="e.g. ₦50,000 – ₦200,000">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell me about your project, goals, and timeline..."></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="submitBtn">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ─── THEME TOGGLE BTN ─── -->
+<button id="theme-toggle" title="Switch theme" onclick="toggleTheme()">
+  <!-- Fire icon -->
+  <svg class="toggle-icon toggle-icon-fire" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2C9 6 7 8 7 12a5 5 0 0010 0c0-2-1-4-2-5-1 2-2 3-3 3 0-3 0-6-2-8z" fill="url(#fg1)" stroke="none"/>
+    <defs><linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f5a800"/><stop offset="100%" stop-color="#ff2e2e"/></linearGradient></defs>
+  </svg>
+  <!-- Aurora icon -->
+  <svg class="toggle-icon toggle-icon-aurora" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="4" fill="url(#ag1)"/>
+    <path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="url(#ag2)" stroke-width="1.5" stroke-linecap="round"/>
+    <defs>
+      <linearGradient id="ag1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2e8fff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+      <linearGradient id="ag2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2e8fff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+    </defs>
+  </svg>
+  <!-- Neon Red icon -->
+  <svg class="toggle-icon toggle-icon-red" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="5" fill="#ff2e2e" opacity="0.9"/>
+    <circle cx="12" cy="12" r="9" stroke="#ff2e2e" stroke-width="1" opacity="0.4"/>
+    <circle cx="12" cy="12" r="7" stroke="#ff2e2e" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
+  </svg>
+</button>
+<div id="theme-flash"></div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <a href="#hero" class="footer-logo">JI<span>.</span></a>
+  <p class="footer-copy">© 2025 Joseph Ikenna — Designed with <span>♥</span> & Precision</p>
+  <a href="#hero" class="back-top" title="Back to top">↑</a>
+</footer>
+</div>
+
+<!-- PROJECT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-img-area" id="modalImg"></div>
+    <div class="modal-body">
+      <div class="section-label" id="modalCat" style="margin-bottom:12px;"></div>
+      <h2 class="section-title" id="modalTitle" style="font-size:36px;margin-bottom:16px;"></h2>
+      <p id="modalDesc" style="color:var(--muted);line-height:1.7;font-size:14px;margin-bottom:24px;"></p>
+      <div id="modalTags" style="display:flex;gap:10px;flex-wrap:wrap;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── THEME INIT ───
+// Cycles: fire → aurora → neonred → fire…
+(function() {
+  const order = ['fire', 'aurora', 'neonred'];
+  const last = localStorage.getItem('ji_theme') || 'neonred';
+  const lastIdx = order.indexOf(last);
+  const next = order[(lastIdx + 1) % order.length];
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('ji_theme', next);
+})();
+
+// ─── THEME TOGGLE (manual) ───
+function toggleTheme() {
+  const order = ['fire', 'aurora', 'neonred'];
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  const idx = order.indexOf(current);
+  const next = order[(idx + 1) % order.length];
+  const flash = document.getElementById('theme-flash');
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 300);
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('ji_theme', next);
+  recolorParticles();
+}
+
+// ─── CURSOR ───
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+const animCursor = () => {
+  cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+  rx += (cx - rx) * 0.12; ry += (cy - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+};
+animCursor();
+document.querySelectorAll('a,button,.project-card,.testi-card,.service-card,.tool-card,.why-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hovered'); ring.classList.add('hovered'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hovered'); ring.classList.remove('hovered'); });
+});
+
+// ─── PARTICLES ───
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+resize(); window.addEventListener('resize', resize);
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.speedY = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.5 + 0.1;
+    const theme = document.documentElement.getAttribute('data-theme');
+    const p1 = theme === 'aurora' ? '#2e8fff' : '#ff2e2e';
+    const p2 = theme === 'aurora' ? '#a855f7' : theme === 'neonred' ? '#ff6666' : '#f5a800';
+    const r = Math.random();
+    this.color = r > 0.75 ? p1 : r > 0.55 ? p2 : '#ffffff';
+  }
+  update() {
+    this.x += this.speedX; this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = this.color === '#ff2e2e' ? 6 : 0;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+function recolorParticles() { particles.forEach(p => p.reset()); }
+const animParticles = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  // draw lines between close red particles
+  particles.filter(p => p.color !== '#ffffff').forEach((p, i, arr) => {
+    arr.slice(i + 1).forEach(p2 => {
+      const dx = p.x - p2.x, dy = p.y - p2.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120) {
+        ctx.save();
+        ctx.globalAlpha = (1 - dist/120) * 0.08;
+        const _pt = document.documentElement.getAttribute('data-theme');
+        const pline = _pt === 'aurora' ? '#7c3aff' : '#ff2e2e';
+        ctx.strokeStyle = pline; ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+        ctx.restore();
+      }
+    });
+  });
+  requestAnimationFrame(animParticles);
+};
+animParticles();
+
+// ─── NAVBAR ───
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ─── HAMBURGER ───
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+function closeMobile() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+
+// ─── SCROLL ANIMATIONS ───
+const fadeEls = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+fadeEls.forEach(el => observer.observe(el));
+
+// ─── SKILL BARS ───
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const fills = e.target.querySelectorAll('.skill-bar-fill');
+      fills.forEach(f => {
+        setTimeout(() => { f.style.width = f.dataset.width + '%'; }, 100);
+      });
+    }
+  });
+}, { threshold: 0.2 });
+const skillsSection = document.getElementById('skills');
+if (skillsSection) barObserver.observe(skillsSection);
+
+// ─── COUNTER ───
+function countUp(el, target, duration=2000) {
+  const start = Date.now();
+  const update = () => {
+    const progress = Math.min((Date.now() - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(eased * target).toLocaleString();
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target.toLocaleString();
+  };
+  update();
+}
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.stat-num[data-count]').forEach(el => {
+        countUp(el, parseInt(el.dataset.count));
+      });
+      statsObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+const statsSection = document.getElementById('stats');
+if (statsSection) statsObserver.observe(statsSection);
+
+// ─── PORTFOLIO FILTER ───
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.project-card').forEach(card => {
+      if (filter === 'all' || card.dataset.category === filter) {
+        card.style.opacity = '1'; card.style.pointerEvents = 'auto';
+      } else {
+        card.style.opacity = '0.25'; card.style.pointerEvents = 'none';
+      }
+    });
+  });
+});
+
+// ─── MODAL ───
+const projectData = [
+  { cat: 'Branding', title: 'NOVA Brand Identity', desc: 'Full brand identity system for a Nigerian fintech startup — logo design, color system, typography, business cards, letterhead, and comprehensive brand guidelines. The result was a bold, trust-inspiring visual language that helped NOVA secure seed funding within 3 months of launch.', tags: ['Logo Design', 'Brand Guidelines', 'Typography', 'Color System'], image: 'images/nova.png', bg: 'linear-gradient(135deg,#1a0a0a,#2d0d0d)' },
+  { cat: 'UI/UX Design', title: 'HealthTrack App', desc: 'Complete UI/UX redesign of a mobile health tracking app — from initial UX audit and user research through wireframing, prototyping, and final high-fidelity UI design. Resulted in a 47% improvement in daily active users and a 4.7 App Store rating post-launch.', tags: ['User Research', 'Wireframing', 'Prototyping', 'Mobile UI'], image: 'images/uiux.jpg', bg: 'linear-gradient(135deg,#0a0a1a,#0d0d2d)' },
+  { cat: 'Social Media', title: 'GreenEarth Campaign', desc: '30-day visual content campaign for an eco-conscious lifestyle brand. Included 90+ branded templates for Instagram, Facebook, and TikTok, plus a complete content calendar with visual direction. Brand followers grew 340% over the campaign period.', tags: ['Instagram', 'Templates', 'Campaign Design', 'Content Strategy'], image: 'images/green earth.png', bg: 'linear-gradient(135deg,#0a1a0a,#0d2d0d)' },
+  { cat: 'Branding', title: 'Luxe Coffee Co.', desc: 'Premium brand identity and packaging design for a specialty coffee chain targeting urban Nigerian professionals. Included logo, packaging for 6 SKUs, menu design, store signage, and takeaway cup design. Now operating 3 locations in Lagos.', tags: ['Packaging', 'Logo', 'Menu Design', 'Signage'], image: 'images/coffee.jpg', bg: 'linear-gradient(135deg,#1a1a00,#2d2d00)' },
+  { cat: 'Motion Graphics', title: 'TechPulse Intro', desc: 'Animated logo reveal and 15-second channel intro sequence for a tech YouTube channel with 200k+ subscribers. Created in After Effects with 3D depth, particle effects, and sound-synchronized timing. The sequence won a viewer design award in its niche.', tags: ['After Effects', 'Animation', 'Logo Reveal', 'Motion Design'], image: 'images/motion.png', bg: 'linear-gradient(135deg,#1a001a,#2d002d)' },
+  { cat: 'UI/UX Design', title: 'Finvest Dashboard', desc: 'Investment portfolio management web application UI — turning complex financial data into a clean, scannable dashboard experience. Included data visualization components, onboarding flows, and a full design system. Adopted by 12,000 users in beta.', tags: ['Dashboard UI', 'Data Visualization', 'Design System', 'Web App'], image: 'images/trading.png', bg: 'linear-gradient(135deg,#001a1a,#002d2d)' },
+  { cat: 'Social Media', title: 'FoodieHub Reels', desc: 'Visual content strategy, branded templates, and Reels design system for a fast-growing food delivery startup. Created 60+ templates, a color-coded content framework, and a posting strategy that tripled engagement rate within 6 weeks.', tags: ['Reels Design', 'Templates', 'Food Branding', 'Engagement Strategy'], image: 'images/foodie.png', bg: 'linear-gradient(135deg,#1a0a00,#2d1500)' },
+  { cat: 'Branding', title: 'Apex Fitness Brand', desc: 'High-energy brand identity for a premium fitness coaching business. Designed to convey strength, discipline, and performance. Includes logo, apparel mockups, social media templates, gym signage concepts, and a full brand style guide.', tags: ['Sports Branding', 'Apparel Design', 'Social Templates', 'Brand Guide'], image: 'images/apex1.png', bg: 'linear-gradient(135deg,#08080a,#141420)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (1).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (2).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (3).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (4).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (5).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (6).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (7).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (8).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (9).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (10).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (11).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (12).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (13).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (14).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (15).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (16).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (17).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (18).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (19).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (20).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+  { cat: 'side gig', title: 'Graphics Design', desc: 'Versatile graphic design across flyers, posters, packaging, and digital campaigns.', tags: ['Flyer Design', 'Poster Design', 'Marketing Materials'], image: 'images/project (21).jpg', bg: 'linear-gradient(135deg,#0a0a0a,#0d0d0d)' },
+];
+
+
+function openModal(index) {
+  const data = projectData[index];
+  const overlay = document.getElementById('modalOverlay');
+  const modalImgArea = document.getElementById('modalImg');
+  
+  if (data.image) {
+    modalImgArea.innerHTML = `<img src="${data.image}" alt="${data.title}" style="width:100%;height:100%;object-fit:cover;">`;
+  } else {
+    modalImgArea.style.background = data.bg;
+    modalImgArea.innerHTML = `<span style="font-family:var(--font-display);font-size:100px;color:rgba(255,255,255,0.04);letter-spacing:-2px;">${String(index+1).padStart(2,'0')}</span>`;
+  }
+  
+  document.getElementById('modalCat').textContent = data.cat;
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalDesc').textContent = data.desc;
+  document.getElementById('modalTags').innerHTML = data.tags.map(t => `<span class="pill">${t}</span>`).join('');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+// ─── FORM ───
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('sent');
+  btn.style.pointerEvents = 'none';
+  setTimeout(() => {
+    btn.classList.remove('sent');
+    btn.style.pointerEvents = 'auto';
+    this.reset();
+  }, 3000);
+});
+</script>
+</body>
+</html>
